@@ -11,14 +11,14 @@ void sum_re(int n, vector<int>& a);
 int main()
 {
     int num_tests = 100;
-    vector<int> sizes = {10, 50, 100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 100000, 1000000};
-    // vector<int> sizes = {1000000};
+    // vector<int> sizes = {10, 50, 100, 200, 300, 500, 1000, 2000, 3000, 5000, 10000, 100000, 1000000};
+    vector<int> sizes = {1000000};
 
-    cout << "数组规模 | 测试次数 | 平凡算法总时间 (秒) | 平凡算法平均时间 (秒) | 优化算法1总时间 (秒) | 优化算法1平均时间 (秒) | 优化算法2总时间 (秒) | 优化算法2平均时间 (秒) | 优化算法3总时间 (秒) | 优化算法3平均时间 (秒)" << endl;
+    cout << "数组规模 | 测试次数 | 平凡算法总时间 (秒) | 平凡算法平均时间 (秒) | 优化算法1总时间 (秒) | 优化算法1平均时间 (秒) | 优化算法2总时间 (秒) | 优化算法2平均时间 (秒) | 优化算法3总时间 (秒) | 优化算法3平均时间 (秒)| 优化算法4总时间 (秒) | 优化算法4平均时间 (秒)" << endl;
     cout << "--------------------------------------------------------------------------------------------------------------------------------------------------------------------" << endl;
     for (int n : sizes)
     {
-        double total_time_plain = 0.0, total_time_opt1 = 0.0, total_time_opt2 = 0.0, total_time_opt3 = 0.0;
+        double total_time_plain = 0.0, total_time_opt1 = 0.0, total_time_opt2 = 0.0, total_time_opt3 = 0.0, total_time_opt4 = 0.0;
 
         for (int t = 0; t < num_tests; ++t)
         {
@@ -29,54 +29,69 @@ int main()
             }
 
             int sum = 0;
-            auto start_1 = high_resolution_clock::now();
-            for (int i = 0; i < n; ++i)
+            // auto start_1 = high_resolution_clock::now();
+            // for (int i = 0; i < n; ++i)
+            // {
+            //     sum += a[i];
+            // }
+            // auto end_1 = high_resolution_clock::now();
+
+            // sum = 0;
+            // int sum_1 = 0, sum_2 = 0;
+            // auto start_2 = high_resolution_clock::now();
+            // for (int i = 0; i < n; i += 2)
+            // {
+            //     sum_1 += a[i];
+            //     if (i + 1 < n)
+            //         sum_2 += a[i + 1];
+            // }
+            // sum = sum_1 + sum_2;
+            // auto end_2 = high_resolution_clock::now();
+
+            // vector<int> b = a;
+            // auto start_3 = high_resolution_clock::now();
+            // sum_re(n, b);
+            // auto end_3 = high_resolution_clock::now();
+
+            // vector<int> c = a;
+            // auto start_4 = high_resolution_clock::now();
+            // for (int m = n; m > 1; m /= 2)
+            // {
+            //     for (int i = 0; i < m / 2; ++i)
+            //     {
+            //         c[i] = c[i * 2] + c[i * 2 + 1];
+            //     }
+            // }
+            // auto end_4 = high_resolution_clock::now();
+            
+            //8路展开
+            sum = 0;
+            auto start_5 = high_resolution_clock::now();
+            for (int i = 0; i + 7 < n; i += 8)
+            {
+                sum += a[i] + a[i + 1] + a[i + 2] + a[i + 3] + a[i + 4] + a[i + 5] + a[i + 6] + a[i + 7];
+            }
+            for (int i = (n / 8) * 8; i < n; ++i)
             {
                 sum += a[i];
             }
-            auto end_1 = high_resolution_clock::now();
+            auto end_5 = high_resolution_clock::now();
 
-            sum = 0;
-            int sum_1 = 0, sum_2 = 0;
-            auto start_2 = high_resolution_clock::now();
-            for (int i = 0; i < n; i += 2)
-            {
-                sum_1 += a[i];
-                if (i + 1 < n)
-                    sum_2 += a[i + 1];
-            }
-            sum = sum_1 + sum_2;
-            auto end_2 = high_resolution_clock::now();
-
-            vector<int> b = a;
-            auto start_3 = high_resolution_clock::now();
-            sum_re(n, b);
-            auto end_3 = high_resolution_clock::now();
-
-            vector<int> c = a;
-            auto start_4 = high_resolution_clock::now();
-            for (int m = n; m > 1; m /= 2)
-            {
-                for (int i = 0; i < m / 2; ++i)
-                {
-                    c[i] = c[i * 2] + c[i * 2 + 1];
-                }
-            }
-            auto end_4 = high_resolution_clock::now();
-
-            total_time_plain += duration<double>(end_1 - start_1).count();
-            total_time_opt1 += duration<double>(end_2 - start_2).count();
-            total_time_opt2 += duration<double>(end_3 - start_3).count();
-            total_time_opt3 += duration<double>(end_4 - start_4).count();
+            // total_time_plain += duration<double>(end_1 - start_1).count();
+            // total_time_opt1 += duration<double>(end_2 - start_2).count();
+            // total_time_opt2 += duration<double>(end_3 - start_3).count();
+            // total_time_opt3 += duration<double>(end_4 - start_4).count();
+            total_time_opt4 += duration<double>(end_5 - start_5).count();
         }
 
-        double avg_time_plain = total_time_plain / num_tests;
-        double avg_time_opt1 = total_time_opt1 / num_tests;
-        double avg_time_opt2 = total_time_opt2 / num_tests;
-        double avg_time_opt3 = total_time_opt3 / num_tests;
+        // double avg_time_plain = total_time_plain / num_tests;
+        // double avg_time_opt1 = total_time_opt1 / num_tests;
+        // double avg_time_opt2 = total_time_opt2 / num_tests;
+        // double avg_time_opt3 = total_time_opt3 / num_tests;
+        double avg_time_opt4 = total_time_opt4 / num_tests;
 
-        printf("%-10d | %-8d | %-18.10f | %-18.10f | %-18.10f | %-18.10f | %-18.10f | %-18.10f | %-18.10f | %-18.10f\n",n, num_tests, total_time_plain, avg_time_plain, total_time_opt1, avg_time_opt1, total_time_opt2, avg_time_opt2, total_time_opt3, avg_time_opt3);
-        // printf("%-10d | %-8d | %-18.10f | %-18.10f | \n",n, num_tests, total_time_opt3, avg_time_opt3);
+        // printf("%-10d | %-8d | %-14.10f | %-14.10f | %-14.10f | %-14.10f | %-14.10f | %-14.10f | %-14.10f | %-14.10f| %-14.10f | %-14.10f\n",n, num_tests, total_time_plain, avg_time_plain, total_time_opt1, avg_time_opt1, total_time_opt2, avg_time_opt2, total_time_opt3, avg_time_opt3, total_time_opt4, avg_time_opt4);
+        printf("%-10d | %-8d | %-18.10f | %-18.10f | \n",n, num_tests, total_time_opt4, avg_time_opt4);
         
     }
 
